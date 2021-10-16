@@ -46,7 +46,7 @@ async def post_menu(name:str):
 
 
 @app.put('/menu/{item_id}')
-async def update_menu(item_id:int, name:str):
+async def update_the_menu(item_id:int, name:str):
     for menu_item in data['menu']: 
         if menu_item['id'] == item_id:
             menu_item['name']=name
