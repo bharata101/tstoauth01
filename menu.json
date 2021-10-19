@@ -1,10 +1,6 @@
 {
     "menu": [
         {
-            "id": 1,
-            "name": "nasi"
-        },
-        {
             "id": 2,
             "name": "ayam"
         },
