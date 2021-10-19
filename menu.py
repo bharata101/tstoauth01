@@ -51,7 +51,6 @@ class UserInDB(User):
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 app = FastAPI()
@@ -151,9 +150,9 @@ async def read_own_items(current_user: User = Depends(get_current_active_user)):
 
 #kebawah ini adalah bagian menunya
 
-@app.get('/')
-def root(current_user: User = Depends(get_current_active_user)):
-    return {"Menu":"Item"}
+@app.get("/")
+async def docs_redirect():
+    return RedirectResponse(url='/docs')
     
 @app.get('/menu')
 def read_all_menu(current_user: User = Depends(get_current_active_user)):
