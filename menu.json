@@ -1,20 +1,16 @@
 {
     "menu": [
         {
+            "id": 1,
+            "name": "ayam"
+        },
+        {
             "id": 2,
-            "name": "ayam"
+            "name": "ikan"
         },
         {
-            "id": 4,
-            "name": "sapi"
-        },
-        {
-            "id": 5,
-            "name": "donut"
-        },
-        {
-            "id": 6,
-            "name": "ayam"
+            "id": 3,
+            "name": "sayur"
         }
     ]
 }
