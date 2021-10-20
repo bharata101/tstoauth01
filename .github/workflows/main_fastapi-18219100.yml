@@ -60,4 +60,4 @@ jobs:
         with:
           app-name: 'fastapi-18219100'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_D8AA03FC513349368719AC62EA5F3EBD }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_1C635148F53B45A583207D6784FF47E1 }}
