@@ -144,10 +144,6 @@ async def read_own_items(current_user: User = Depends(get_current_active_user)):
 
 #kebawah ini adalah bagian menunya
 
-@app.get("/")
-async def docs_redirect():
-    return RedirectResponse(url='/docs')
-    
 @app.get('/menu')
 def read_all_menu(current_user: User = Depends(get_current_active_user)):
     return data
@@ -163,7 +159,7 @@ async def read_menu(item_id:int, current_user: User = Depends(get_current_active
     )
 
 @app.post('/menu')
-async def tambah_menu(item: Item):
+async def tambah_menu(item: Item, current_user: User = Depends(get_current_active_user)):
 	item_dict = item.dict()
 	item_found = False
 	for menu_item in data['menu']:
@@ -174,7 +170,7 @@ async def tambah_menu(item: Item):
 	if not item_found:
 		data['menu'].append(item_dict)
 		with open("menu.json","w") as write_file:
-			json.dump(data, write_file)
+			json.dump(data, write_file, indent=4)
 
 		return item_dict
 	raise HTTPException(
@@ -231,4 +227,8 @@ async def delete_menu(item_id: int, current_user: User = Depends(get_current_act
     return {"pesan": "deleted!"}
 
 
+@app.get("/")
+async def docs_redirect():
+    return RedirectResponse(url='/docs')
+    
 
