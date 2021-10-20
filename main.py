@@ -27,15 +27,12 @@ fake_users_db = {
     }
 }
 
-
 class Token(BaseModel):
     access_token: str
     token_type: str
 
-
 class TokenData(BaseModel):
     username: Optional[str] = None
-
 
 class User(BaseModel):
     username: str
@@ -43,18 +40,14 @@ class User(BaseModel):
     full_name: Optional[str] = None
     disabled: Optional[bool] = None
 
-
 class UserInDB(User):
     hashed_password: str
-
-
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 app = FastAPI()
-
 
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
@@ -68,8 +61,6 @@ def get_user(db, username: str):
         user_dict = db[username]
         return UserInDB(**user_dict)
 
-
-
 def authenticate_user(fake_db, username: str, password: str):
 
     user = get_user(fake_db, username)
@@ -82,13 +73,10 @@ def authenticate_user(fake_db, username: str, password: str):
 
     return user
 
-
-
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     to_encode = data.copy()
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
-
 
 async def get_current_user(token: str = Depends(oauth2_scheme)):
     credentials_exception = HTTPException(
@@ -109,19 +97,21 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
         raise credentials_exception
     return user
 
-
 async def get_current_active_user(current_user: User = Depends(get_current_user)):
     if current_user.disabled:
         raise HTTPException(status_code=400, detail="Inactive user")
     return current_user
 
-
-
-
 with open("menu.json","r") as read_file: 
     data = json.load(read_file)
 
+# @app.on_event("startup")
+# async def startup():
+#     await database.connect()
 
+# @app.on_event("shutdown")
+# async def shutdown():
+#     await database.disconnect()
 
 @app.post("/token", response_model=Token)
 async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
