@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {
     "menu": [
         {
@@ -21,4 +22,21 @@
             "name": "ayam"
         }
     ]
+=======
+{
+    "menu": [
+        {
+            "id": 1,
+            "name": "ayam"
+        },
+        {
+            "id": 2,
+            "name": "ikan"
+        },
+        {
+            "id": 3,
+            "name": "sayur"
+        }
+    ]
+>>>>>>> d882a4fa41e34321764daed261d1053d48e2ea40
 }
