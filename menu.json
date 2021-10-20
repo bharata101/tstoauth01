@@ -1,28 +1,3 @@
-<<<<<<< HEAD
-{
-    "menu": [
-        {
-            "id": 1,
-            "name": "nasi"
-        },
-        {
-            "id": 2,
-            "name": "ayam"
-        },
-        {
-            "id": 4,
-            "name": "sapi"
-        },
-        {
-            "id": 5,
-            "name": "donut"
-        },
-        {
-            "id": 6,
-            "name": "ayam"
-        }
-    ]
-=======
 {
     "menu": [
         {
@@ -38,5 +13,4 @@
             "name": "sayur"
         }
     ]
->>>>>>> d882a4fa41e34321764daed261d1053d48e2ea40
 }
