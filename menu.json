@@ -1,16 +1,1 @@
-{
-    "menu": [
-        {
-            "id": 1,
-            "name": "ayam"
-        },
-        {
-            "id": 2,
-            "name": "ikan"
-        },
-        {
-            "id": 3,
-            "name": "sayur"
-        }
-    ]
-}
+{"menu": [{"id": 1, "name": "ayam"}, {"id": 2, "name": "ikan"}, {"id": 3, "name": "sayur"}, {"id": 4, "name": "jago"}]}

@@ -27,6 +27,10 @@ fake_users_db = {
     }
 }
 
+class Item(BaseModel):
+    id: int
+    name: str
+
 class Token(BaseModel):
     access_token: str
     token_type: str
@@ -159,23 +163,40 @@ async def read_menu(item_id:int, current_user: User = Depends(get_current_active
     )
 
 @app.post('/menu')
-async def post_menu(name:str, current_user: User = Depends(get_current_active_user)):
-    id=1
-    if (len(data['menu'])>0):
-        id = data['menu'][len(data['menu'])-1]['id']+1
-    new_data = {'id': id, 'name':name}
-    data['menu'].append(dict(new_data))
-    read_file.close()
+async def tambah_menu(item: Item):
+	item_dict = item.dict()
+	item_found = False
+	for menu_item in data['menu']:
+		if menu_item['id'] == item_dict['id']:
+			item_found = True
+			return "Menu ID "+str(item_dict['id'])+" exists."
+	
+	if not item_found:
+		data['menu'].append(item_dict)
+		with open("menu.json","w") as write_file:
+			json.dump(data, write_file)
 
-    with open("menu.json","w") as write_file: 
-        json.dump(data, write_file, indent=4)
+		return item_dict
+	raise HTTPException(
+		status_code=404, detail=f'item not found'
+	)
+# async def tambah_menu(name:str, current_user: User = Depends(get_current_active_user)):
+#     id=1
+#     if (len(data['menu'])>0):
+#         id = data['menu'][len(data['menu'])-1]['id']+1
+#     new_data = {'id': id, 'name':name}
+#     data['menu'].append(dict(new_data))
+#     read_file.close()
 
-    write_file.close()
+#     with open("menu.json","w") as write_file: 
+#         json.dump(data, write_file, indent=4)
 
-    return (new_data)
-    raise HTTPExpception(
-        status_code = 500, detail ='internal server errors'
-    )
+#     write_file.close()
+
+#     return (new_data)
+#     raise HTTPExpception(
+#         status_code = 500, detail ='internal server errors'
+#     )
 
 
 @app.put('/menu/{item_id}')
@@ -191,7 +212,7 @@ async def update_menu(item_id:int, name:str, current_user: User = Depends(get_cu
 
         write_file.close()
 
-    return {"pesan":"Data terupdate!"}
+    return {"pesan":"Data te rupdate!"}
     raise HTTPExpception(
         status_code = 404, detail ='Item not found'
     )
