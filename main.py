@@ -30,6 +30,9 @@ fake_users_db = {
 class Item(BaseModel):
     id: int
     name: str
+    username: str
+    email : str
+    password : str
 
 class Token(BaseModel):
     access_token: str
@@ -51,7 +54,7 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
-app = FastAPI(title="Tugas TST, Fastapi - Oauth2", description="Galuh Dipa Bharata - 18219100")
+app = FastAPI(title="API endpoints, Create User and Get User", description="Galuh Dipa Bharata - 18219100")
 
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
@@ -106,7 +109,8 @@ async def get_current_active_user(current_user: User = Depends(get_current_user)
         raise HTTPException(status_code=400, detail="Inactive user")
     return current_user
 
-with open("menu.json","r") as read_file: 
+
+with open("users.json","r") as read_file: 
     data = json.load(read_file)
 
 # @app.on_event("startup")
@@ -133,24 +137,12 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
     return {"access_token": access_token, "token_type": "bearer"}
 
 
-@app.get("/users/me/", response_model=User)
-async def read_users_me(current_user: User = Depends(get_current_active_user)):
-    return current_user
-
-
-@app.get("/users/me/items/")
-async def read_own_items(current_user: User = Depends(get_current_active_user)):
-    return [{"item_id": "Foo", "owner": current_user.username}]
-
 #kebawah ini adalah bagian menunya
 
-@app.get('/menu')
-def read_all_menu(current_user: User = Depends(get_current_active_user)):
-    return data
 
-@app.get('/menu/{item_id}')
-async def read_menu(item_id:int, current_user: User = Depends(get_current_active_user)):
-    for menu_item in data['menu']: 
+@app.get('/users/{users_id}')
+async def read_users(item_id:int, current_user: User = Depends(get_current_active_user)):
+    for menu_item in data['users']: 
         if menu_item['id'] == item_id:
             return menu_item
         
@@ -158,73 +150,24 @@ async def read_menu(item_id:int, current_user: User = Depends(get_current_active
         status_code = 404, detail ='Item not found'
     )
 
-@app.post('/menu')
-async def tambah_menu(item: Item, current_user: User = Depends(get_current_active_user)):
+@app.post('/users')
+async def create_users(item: Item, current_user: User = Depends(get_current_active_user)):
 	item_dict = item.dict()
 	item_found = False
-	for menu_item in data['menu']:
+	for menu_item in data['users']:
 		if menu_item['id'] == item_dict['id']:
 			item_found = True
-			return "Menu ID "+str(item_dict['id'])+" exists."
+			return "User "+str(item_dict['id'])+" sudah ada."
 	
 	if not item_found:
-		data['menu'].append(item_dict)
-		with open("menu.json","w") as write_file:
+		data['users'].append(item_dict)
+		with open("users.json","w") as write_file:
 			json.dump(data, write_file, indent=4)
 
 		return item_dict
 	raise HTTPException(
 		status_code=404, detail=f'item not found'
 	)
-# async def tambah_menu(name:str, current_user: User = Depends(get_current_active_user)):
-#     id=1
-#     if (len(data['menu'])>0):
-#         id = data['menu'][len(data['menu'])-1]['id']+1
-#     new_data = {'id': id, 'name':name}
-#     data['menu'].append(dict(new_data))
-#     read_file.close()
-
-#     with open("menu.json","w") as write_file: 
-#         json.dump(data, write_file, indent=4)
-
-#     write_file.close()
-
-#     return (new_data)
-#     raise HTTPExpception(
-#         status_code = 500, detail ='internal server errors'
-#     )
-
-
-@app.put('/menu/{item_id}')
-async def update_menu(item_id:int, name:str, current_user: User = Depends(get_current_active_user)):
-    for menu_item in data['menu']: 
-        if menu_item['id'] == item_id:
-            menu_item['name']=name
-        
-        read_file.close()
-
-        with open("menu.json","w") as write_file: 
-            json.dump(data, write_file, indent=4)
-
-        write_file.close()
-
-    return {"pesan":"Data te rupdate!"}
-    raise HTTPExpception(
-        status_code = 404, detail ='Item not found'
-    )
-
-@app.delete('/menu/{item_id}')
-async def delete_menu(item_id: int, current_user: User = Depends(get_current_active_user)):
-    for menu_item in data['menu']: 
-        if menu_item['id'] == item_id:
-            data['menu'].remove(menu_item)
-        read_file.close()
-
-        with open("menu.json","w") as write_file: 
-            json.dump(data, write_file, indent=4)
-
-        write_file.close()
-    return {"pesan": "deleted!"}
 
 
 @app.get("/")
